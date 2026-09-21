@@ -1,0 +1,6 @@
+{
+  "name": "Luméa — Fashion Brand",
+  "description": "Effortless style for every day. Modern fashion boutique landing page with responsive shop catalog, shopping bag, and customizable imagery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
