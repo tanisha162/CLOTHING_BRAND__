@@ -66,7 +66,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <span className="text-[11px] font-semibold text-[#8C8074] uppercase flex-shrink-0">
             Popular:
           </span>
-          {['Floral Maxi', 'Linen Pants', 'Blouse', 'Knit Dress'].map((term) => (
+          {['Floral Dress', 'Summer Tank', 'Boho Dress', 'Graphic Tee', 'Dresses', 'Tops'].map((term) => (
             <button
               key={term}
               onClick={() => setQuery(term)}

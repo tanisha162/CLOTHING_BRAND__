@@ -11,4 +11,29 @@
     color: #1C1917;
     background-color: #FAF8F5;
   }
+
+  /* Custom subtle scrollbars across the app */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F1ECE4;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D5C9BA;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B5A593;
+  }
+}
+
+/* Hide scrollbar for clean horizontal tab navigation */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

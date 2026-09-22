@@ -17,6 +17,7 @@ interface HeaderProps {
   onOpenCart: () => void;
   onOpenWishlist: () => void;
   onOpenSearch: () => void;
+  onOpenAccount: () => void;
   onOpenDeployGuide: () => void;
   onSelectCategory?: (category: string) => void;
 }
@@ -27,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenCart,
   onOpenWishlist,
   onOpenSearch,
+  onOpenAccount,
   onOpenDeployGuide,
   onSelectCategory,
 }) => {
@@ -149,8 +151,10 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               id="header-account-btn"
-              className="p-2 text-[#2D2823] hover:text-black transition-colors rounded-full hover:bg-[#EFEAE2] hidden sm:block"
+              onClick={onOpenAccount}
+              className="p-2 text-[#2D2823] hover:text-black transition-colors rounded-full hover:bg-[#EFEAE2]"
               aria-label="User account"
+              title="My Account & Orders"
             >
               <User className="w-5 h-5" />
             </button>
@@ -195,6 +199,16 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div className="pt-3 border-t border-[#EAE5DF] flex flex-col gap-2">
+            <button
+              onClick={() => {
+                onOpenAccount();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md bg-[#EDE5DB] text-[#1C1917] text-sm font-medium hover:bg-[#E3D9CC]"
+            >
+              <User className="w-4 h-4 text-[#B85D3B]" />
+              <span>My Account & Orders</span>
+            </button>
             <button
               onClick={() => {
                 onOpenDeployGuide();

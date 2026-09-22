@@ -12,6 +12,7 @@ import { ProductModal } from './components/ProductModal';
 import { DeployGuideModal } from './components/DeployGuideModal';
 import { SearchModal } from './components/SearchModal';
 import { WishlistDrawer } from './components/WishlistDrawer';
+import { AccountModal } from './components/AccountModal';
 
 import {
   initialImages,
@@ -48,6 +49,7 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isDeployGuideOpen, setIsDeployGuideOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -189,6 +191,7 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenWishlist={() => setIsWishlistOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenAccount={() => setIsAccountOpen(true)}
         onOpenDeployGuide={() => setIsDeployGuideOpen(true)}
         onSelectCategory={handleSelectCategory}
       />
@@ -292,6 +295,13 @@ export default function App() {
         onClose={() => setIsSearchOpen(false)}
         products={products}
         onSelectProduct={(p) => setSelectedProduct(p)}
+      />
+
+      {/* User Account & Order History Modal */}
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={() => setIsAccountOpen(false)}
+        onExploreProducts={() => handleSelectCategory('all')}
       />
 
       {/* Deploy to Vercel & GitHub Guide Modal */}
