@@ -1,8 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
+import { CategoryStrip } from './components/CategoryStrip';
 import { Hero } from './components/Hero';
 import { CategoryGrid } from './components/CategoryGrid';
 import { Bestsellers } from './components/Bestsellers';
+import { CollectionPage } from './components/CollectionPage';
+import { SizeGuidePage } from './components/SizeGuidePage';
 import { WhyLoveUs } from './components/WhyLoveUs';
 import { EditorialBanner } from './components/EditorialBanner';
 import { Newsletter } from './components/Newsletter';
@@ -13,20 +16,26 @@ import { DeployGuideModal } from './components/DeployGuideModal';
 import { SearchModal } from './components/SearchModal';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { AccountModal } from './components/AccountModal';
+import { OfferBanner } from './components/OfferBanner';
 
 import {
   initialImages,
   defaultCategories,
   defaultProducts,
 } from './data/mockData';
-import { CartItem, Product } from './types';
+import { CartItem, Product, AppPage } from './types';
 import { Check } from 'lucide-react';
 
 export default function App() {
   const [products] = useState<Product[]>(defaultProducts);
   const [categories] = useState(defaultCategories);
 
-  // Initial cart items (2 items matching the screenshot's bag badge = 2)
+  // Active page state
+  const [activePage, setActivePage] = useState<AppPage>('home');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sizeFilterForPage, setSizeFilterForPage] = useState<string | undefined>(undefined);
+
+  // Initial cart items (matching bag badge = 2)
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       product: defaultProducts[0],
@@ -35,15 +44,14 @@ export default function App() {
       quantity: 1,
     },
     {
-      product: defaultProducts[1],
+      product: defaultProducts[7], // Crisp Ribbed Tank
       selectedColor: 'Crisp White',
       selectedSize: 'M',
       quantity: 1,
     },
   ]);
 
-  const [wishlistIds, setWishlistIds] = useState<string[]>(['prod-1']);
-  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('all');
+  const [wishlistIds, setWishlistIds] = useState<string[]>(['prod-dress-1', 'prod-out-1']);
 
   // UI state drawers and modals
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -67,6 +75,20 @@ export default function App() {
     () => cartItems.reduce((sum, item) => sum + item.quantity, 0),
     [cartItems]
   );
+
+  // Scroll to top whenever page changes
+  const handleNavigatePage = (page: AppPage, filterSize?: string) => {
+    setActivePage(page);
+    setSizeFilterForPage(filterSize);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Search handler from Header or Search Modal
+  const handleSearchSubmit = (query: string) => {
+    setSearchQuery(query);
+    setActivePage('search');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Add to cart handler
   const handleAddToCart = (product: Product, color: string, size: string) => {
@@ -149,23 +171,6 @@ export default function App() {
     });
   };
 
-  // Category filter selection
-  const handleSelectCategory = (categoryKey: string) => {
-    setActiveCategoryFilter(categoryKey);
-    const bestsellersElement = document.getElementById('bestsellers');
-    if (bestsellersElement) {
-      bestsellersElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  // Filtered products based on selected category
-  const filteredProducts = useMemo(() => {
-    if (activeCategoryFilter === 'all' || activeCategoryFilter === 'sale') {
-      return products;
-    }
-    return products.filter((p) => p.category === activeCategoryFilter);
-  }, [products, activeCategoryFilter]);
-
   // Checkout order simulated
   const handleCheckout = () => {
     setIsCartOpen(false);
@@ -178,86 +183,212 @@ export default function App() {
       
       {/* Toast notification banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#1C1917] text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-lg shadow-xl flex items-center gap-2.5 animate-fade-in border border-[#3C352E]">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#1C1917] text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 animate-fade-in border border-[#3C352E]">
           <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Header */}
+      {/* Header with in-header search & category navigation */}
       <Header
+        activePage={activePage}
         cartCount={cartCount}
         wishlistCount={wishlistIds.length}
+        products={products}
+        onNavigatePage={handleNavigatePage}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenWishlist={() => setIsWishlistOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenAccount={() => setIsAccountOpen(true)}
         onOpenDeployGuide={() => setIsDeployGuideOpen(true)}
-        onSelectCategory={handleSelectCategory}
+        onSearchSubmit={handleSearchSubmit}
+        onSelectProduct={(p) => setSelectedProduct(p)}
       />
 
+      {/* Quick category strip (Bewakoof style) */}
+      <CategoryStrip
+        activePage={activePage}
+        onSelectPage={handleNavigatePage}
+      />
+
+      {/* Main Dynamic View Routing */}
       <main className="flex-grow">
-        {/* Hero Section */}
-        <Hero
-          heroImage={initialImages.hero}
-          onShopNewArrivals={() => handleSelectCategory('all')}
-        />
+        {/* 1. HOME VIEW */}
+        {activePage === 'home' && (
+          <>
+            {/* Hero Section */}
+            <Hero
+              heroImage={initialImages.hero}
+              onShopNewArrivals={() => handleNavigatePage('new-arrivals')}
+              onExploreBestsellers={() => handleNavigatePage('bestsellers')}
+              onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            />
 
-        {/* Shop By Category */}
-        <CategoryGrid
-          categories={categories}
-          onSelectCategory={handleSelectCategory}
-        />
+            {/* Big Bewakoof-Style Mega Offer & TriBe Perks Banner */}
+            <OfferBanner onShopCollection={(key) => handleNavigatePage(key as AppPage)} />
 
-        {/* Category Filter Pills when active */}
-        <div id="bestsellers" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <div className="flex items-center justify-center gap-2 flex-wrap pb-2">
-            {[
-              { label: 'All Bestsellers', key: 'all' },
-              { label: 'Dresses', key: 'dresses' },
-              { label: 'Tops', key: 'tops' },
-              { label: 'Outerwear', key: 'outerwear' },
-              { label: 'Handbags', key: 'handbags' },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveCategoryFilter(tab.key)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  activeCategoryFilter === tab.key
-                    ? 'bg-[#1C1917] text-white shadow-xs'
-                    : 'bg-[#EDE5DA] text-[#4F4439] hover:bg-[#E3D9CC]'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
+            {/* Shop By Category Grid */}
+            <CategoryGrid
+              categories={categories}
+              onSelectCategory={(key) => handleNavigatePage(key as AppPage)}
+            />
 
-        {/* Bestsellers Section */}
-        <Bestsellers
-          products={filteredProducts.length > 0 ? filteredProducts : products}
-          wishlistIds={wishlistIds}
-          onToggleWishlist={handleToggleWishlist}
-          onAddToCart={handleAddToCart}
-          onQuickView={(p) => setSelectedProduct(p)}
-        />
+            {/* Bestsellers Showcase */}
+            <div id="bestsellers">
+              <Bestsellers
+                products={products.filter((p) => p.isBestSeller).slice(0, 4)}
+                wishlistIds={wishlistIds}
+                onToggleWishlist={handleToggleWishlist}
+                onAddToCart={handleAddToCart}
+                onQuickView={(p) => setSelectedProduct(p)}
+                onViewAll={() => handleNavigatePage('bestsellers')}
+              />
+            </div>
 
-        {/* Why Women Love Luméa */}
-        <WhyLoveUs />
+            {/* Why Women Love Luméa */}
+            <WhyLoveUs />
 
-        {/* Editorial Banner */}
-        <EditorialBanner
-          bannerImage={initialImages.editorialBanner}
-          onExploreCollection={() => handleSelectCategory('dresses')}
-        />
+            {/* Editorial Banner */}
+            <EditorialBanner
+              bannerImage={initialImages.editorialBanner}
+              onExploreCollection={() => handleNavigatePage('dresses')}
+            />
 
-        {/* Newsletter / Community */}
-        <Newsletter />
+            {/* Newsletter / Community */}
+            <Newsletter />
+          </>
+        )}
+
+        {/* 2. NEW ARRIVALS PAGE */}
+        {activePage === 'new-arrivals' && (
+          <CollectionPage
+            pageType="new-arrivals"
+            title="New Arrivals Drops"
+            subtitle="The latest vibrant drops, fresh color palettes, and limited-run silhouettes for your seasonal wardrobe."
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
+        {/* 3. ALL BESTSELLERS PAGE */}
+        {activePage === 'bestsellers' && (
+          <CollectionPage
+            pageType="bestsellers"
+            title="All Bestsellers"
+            subtitle="Our most coveted, highest-rated garments loved by thousands of women across the globe."
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
+        {/* 4. DRESSES PAGE */}
+        {activePage === 'dresses' && (
+          <CollectionPage
+            pageType="dresses"
+            title="Dresses Collection"
+            subtitle="From charming off-the-shoulder minis and bohemian beach sundresses to elegant evening cocktail wraps."
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
+        {/* 5. TOPS & TEES PAGE */}
+        {activePage === 'tops' && (
+          <CollectionPage
+            pageType="tops"
+            title="Tops & Tees Collection"
+            subtitle="Essential summer tanks, soft-washed vintage graphic tees, and romantic puff-sleeve linen blouses."
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
+        {/* 6. OUTERWEAR PAGE */}
+        {activePage === 'outerwear' && (
+          <CollectionPage
+            pageType="outerwear"
+            title="Outerwear & Coats"
+            subtitle="Tailored double-breasted trench coats, timeless vintage denim jackets, and oversized bouclé cardigans."
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
+        {/* 7. HANDBAGS PAGE */}
+        {activePage === 'handbags' && (
+          <CollectionPage
+            pageType="handbags"
+            title="Handbags & Totes"
+            subtitle="Hand-woven natural straw market totes, crescent vegan leather shoulder bags, and durable canvas crossbodies."
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
+        {/* 8. SIZE GUIDE & FIT FINDER PAGE */}
+        {activePage === 'size-guide' && (
+          <SizeGuidePage
+            onNavigateToCollection={(page, filterSize) => handleNavigatePage(page, filterSize)}
+          />
+        )}
+
+        {/* 9. SEARCH RESULTS PAGE */}
+        {activePage === 'search' && (
+          <CollectionPage
+            pageType="search"
+            title={`Search Catalog: "${searchQuery}"`}
+            subtitle={`Showing search results for styles matching "${searchQuery}". Filter by your size or sort below.`}
+            searchQuery={searchQuery}
+            initialSizeFilter={sizeFilterForPage}
+            products={products}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onAddToCart={handleAddToCart}
+            onQuickView={(p) => setSelectedProduct(p)}
+            onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer onNavigatePage={handleNavigatePage} />
 
       {/* Sliding Shopping Bag Drawer */}
       <CartDrawer
@@ -287,6 +418,7 @@ export default function App() {
         isWishlisted={selectedProduct ? wishlistIds.includes(selectedProduct.id) : false}
         onToggleWishlist={handleToggleWishlist}
         onAddToCart={handleAddToCart}
+        onOpenSizeGuide={() => handleNavigatePage('size-guide')}
       />
 
       {/* Live Search Modal */}
@@ -295,13 +427,16 @@ export default function App() {
         onClose={() => setIsSearchOpen(false)}
         products={products}
         onSelectProduct={(p) => setSelectedProduct(p)}
+        onViewAllResults={handleSearchSubmit}
+        onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+        onNavigatePage={handleNavigatePage}
       />
 
       {/* User Account & Order History Modal */}
       <AccountModal
         isOpen={isAccountOpen}
         onClose={() => setIsAccountOpen(false)}
-        onExploreProducts={() => handleSelectCategory('all')}
+        onExploreProducts={() => handleNavigatePage('home')}
       />
 
       {/* Deploy to Vercel & GitHub Guide Modal */}

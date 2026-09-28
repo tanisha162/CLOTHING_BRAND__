@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Star, ShoppingBag, ArrowRight, Eye, Check } from 'lucide-react';
+import { Heart, Star, ShoppingBag, ArrowRight, Eye, Check, Zap } from 'lucide-react';
 import { Product } from '../types';
 
 interface BestsellersProps {
@@ -8,6 +8,7 @@ interface BestsellersProps {
   onToggleWishlist: (productId: string) => void;
   onAddToCart: (product: Product, selectedColor: string, selectedSize: string) => void;
   onQuickView: (product: Product) => void;
+  onViewAll?: () => void;
 }
 
 export const Bestsellers: React.FC<BestsellersProps> = ({
@@ -16,6 +17,7 @@ export const Bestsellers: React.FC<BestsellersProps> = ({
   onToggleWishlist,
   onAddToCart,
   onQuickView,
+  onViewAll,
 }) => {
   // Store selected color for each product card
   const [selectedColors, setSelectedColors] = useState<Record<string, string>>(() => {
@@ -63,13 +65,14 @@ export const Bestsellers: React.FC<BestsellersProps> = ({
           </div>
 
           {/* View All Link */}
-          <a
-            href="#bestsellers"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1C1917] hover:text-[#B85D3B] transition-colors group"
+          <button
+            type="button"
+            onClick={onViewAll}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] hover:text-[#B85D3B] transition-colors group cursor-pointer"
           >
-            <span className="underline decoration-[#1C1917]/30 hover:decoration-[#B85D3B]">View All</span>
+            <span className="underline decoration-[#1C1917]/30 hover:decoration-[#B85D3B]">View All Bestsellers</span>
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
+          </button>
         </div>
 
         {/* 4-Column Product Cards Grid */}
@@ -96,12 +99,19 @@ export const Bestsellers: React.FC<BestsellersProps> = ({
                     className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                   />
 
-                  {/* Best Seller Pill */}
-                  {product.isBestSeller && (
-                    <div className="absolute top-3 left-3 bg-[#1C1917] text-white text-[11px] font-medium tracking-wide px-3 py-1 rounded-full shadow-sm">
-                      Best Seller
-                    </div>
-                  )}
+                  {/* Badges (Bewakoof style) */}
+                  <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+                    {product.originalPrice && product.originalPrice > product.price && (
+                      <span className="px-2 py-0.5 rounded-lg bg-[#E11D48] text-white text-[10px] font-black tracking-wider uppercase shadow-xs">
+                        🔥 {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                      </span>
+                    )}
+                    {product.isBestSeller && (
+                      <span className="px-2 py-0.5 rounded-lg bg-[#111827] text-[#FDCB24] text-[9px] font-black tracking-wider uppercase shadow-xs">
+                        BESTSELLER
+                      </span>
+                    )}
+                  </div>
 
                   {/* Wishlist Heart Button */}
                   <button
@@ -161,7 +171,7 @@ export const Bestsellers: React.FC<BestsellersProps> = ({
 
                     {/* Price */}
                     <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-base sm:text-lg font-semibold text-[#1C1917]">
+                      <span className="text-base sm:text-lg font-black text-[#1C1917]">
                         ${product.price.toFixed(2)}
                       </span>
                       {product.originalPrice && (
@@ -170,6 +180,17 @@ export const Bestsellers: React.FC<BestsellersProps> = ({
                         </span>
                       )}
                     </div>
+
+                    {/* TriBe Member Price */}
+                    {product.memberPrice && (
+                      <div className="mt-2 flex items-center justify-between gap-1.5 bg-[#FEF3C7] text-[#92400E] px-2.5 py-1 rounded-xl border border-[#FCD34D] font-bold text-xs shadow-2xs">
+                        <div className="flex items-center gap-1">
+                          <Zap className="w-3.5 h-3.5 text-[#D97706] fill-[#D97706] flex-shrink-0" />
+                          <span className="text-[10px] uppercase font-black text-[#78350F]">TriBe Price:</span>
+                        </div>
+                        <span className="text-xs font-black text-[#111827]">${product.memberPrice.toFixed(2)}</span>
+                      </div>
+                    )}
 
                     {/* Color Swatches */}
                     <div className="flex items-center gap-2 mt-3 mb-4">

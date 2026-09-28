@@ -1,12 +1,17 @@
 export interface Product {
   id: string;
   name: string;
-  category: string;
+  category: 'dresses' | 'tops' | 'outerwear' | 'handbags' | string;
   price: number;
   originalPrice?: number;
+  memberPrice?: number;
   rating: number;
   reviewsCount: number;
   isBestSeller?: boolean;
+  isNewArrival?: boolean;
+  badge?: string;
+  fabric?: string;
+  fit?: string;
   image: string;
   description: string;
   colors: {
@@ -30,6 +35,17 @@ export interface CartItem {
   selectedSize: string;
   quantity: number;
 }
+
+export type AppPage =
+  | 'home'
+  | 'new-arrivals'
+  | 'bestsellers'
+  | 'dresses'
+  | 'tops'
+  | 'outerwear'
+  | 'handbags'
+  | 'size-guide'
+  | 'search';
 
 export interface ImageConfig {
   hero: string;
