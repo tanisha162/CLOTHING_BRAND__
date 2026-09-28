@@ -1,55 +1,94 @@
-# Luméa — Modern Fashion Brand Landing Page
+# Luméa — Modern Fashion Brand & E-Commerce Web App
 
-A modern, high-conversion e-commerce fashion brand landing page built with **React 19**, **Vite**, and **Tailwind CSS**.
+A high-conversion fashion e-commerce storefront inspired by modern direct-to-consumer fashion brands and Bewakoof-style shopping features. Built with **React 19**, **Vite**, **TypeScript**, and **Tailwind CSS**.
 
 ---
 
-## 🚀 Push to GitHub
+## ⚡ How to Deploy on Vercel
 
-1. Initialize git and commit your files:
+The project is already pre-configured with `vercel.json` for optimal Vite Single Page Application (SPA) routing and production builds.
+
+### Option 1: Deploy via GitHub (Recommended — Auto-Updates on Push)
+
+1. **Push your code to GitHub**:
    ```bash
-   git init
    git add .
-   git commit -m "feat: Luméa fashion brand landing page"
+   git commit -m "feat: complete fashion storefront with collection pages and search"
    git branch -M main
-   ```
-
-2. Create a new repository on [GitHub](https://github.com/new).
-
-3. Link and push to your GitHub repo:
-   ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   git remote add origin https://github.com/<YOUR-USERNAME>/<YOUR-REPO-NAME>.git
    git push -u origin main
    ```
 
----
+2. **Connect to Vercel**:
+   - Go to [vercel.com](https://vercel.com) and log in (or sign up with your GitHub account).
+   - Click **"Add New..."** → **"Project"**.
+   - Find and select your GitHub repository from the list and click **"Import"**.
 
-## ⚡ Deploy to Vercel
-
-### Method 1: Import via Vercel Dashboard (Recommended)
-1. Go to [Vercel](https://vercel.com) and log in with your GitHub account.
-2. Click **"Add New..." → "Project"**.
-3. Select your GitHub repository and click **"Import"**.
-4. The framework is automatically detected as **Vite**:
+3. **Verify Project Settings (Auto-Detected)**:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `./`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
-5. Click **"Deploy"**. The pre-configured `vercel.json` ensures client-side routing works smoothly.
+   - **Install Command**: `npm install`
 
-### Method 2: Vercel CLI
-```bash
-npm i -g vercel
-vercel
-```
+4. **Click "Deploy"**:
+   - Vercel will build the project in ~30 seconds and provide you with a live `https://<your-project>.vercel.app` URL with free HTTPS/SSL!
+   - Every time you push new commits to your GitHub repo, Vercel will automatically redeploy the latest changes.
 
 ---
 
-## 🛠️ Features Included
+### Option 2: Deploy Directly via Vercel CLI (Instant)
 
-- **Editorial Fashion Aesthetic**: Editorial serif headings (`Cormorant Garamond`) and modern typography (`Plus Jakarta Sans`).
-- **Interactive Shopping Bag Drawer**: Slide-out cart with item counter badge, quantity adjuster, free shipping progress bar, promo code validation, and checkout simulator.
-- **Product Quick View**: Modal with size picker (XS to XL), color swatch selector, and reviews.
-- **Category Filter & Search**: Real-time product search with keyword suggestions and category filters.
-- **Wishlist Engine**: Save favorite pieces with visual feedback.
-- **Live Image Customizer**: Swap any image on the page (Hero, Categories, Products, Editorial Banner) via local file upload, custom URL, or curated fashion presets.
-- **Newsletter Subscription**: Community email capture with instant coupon validation (`LUMEA15`).
-- **100% Responsive Design**: Optimized for mobile, tablet, and desktop screens.
+If you have Node.js and npm installed locally, you can deploy directly from your terminal:
+
+1. **Install Vercel CLI**:
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Login to Vercel**:
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy (Preview)**:
+   ```bash
+   vercel
+   ```
+   Follow the simple prompts (press Enter to accept default settings).
+
+4. **Deploy to Production**:
+   ```bash
+   vercel --prod
+   ```
+
+---
+
+## ⚙️ Vercel Configuration (`vercel.json`)
+
+The project contains a pre-configured `vercel.json`:
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
+This ensures that client-side page routing (e.g. `/`, `/dresses`, `/size-guide`, etc.) never returns a 404 error when refreshed.
+
+---
+
+## ✨ Features Included
+
+- **In-Header Mega Search Bar**: Autocomplete suggestions, visual product cards, category shortcuts, and live search.
+- **Bewakoof-Style Offer Badges & Banners**: High-contrast golden VIP club banners, interactive promo code copy buttons (`TRIBE15`), and prominent discount pills.
+- **Dedicated Category Collections**: 100% distinct clothing items across Dresses, Tops, Outerwear, Handbags, Bestsellers, and New Drops.
+- **Interactive Fit & Size Guide**: Smart calculator recommending ideal size based on height, weight, preferred fit, and garment type.
+- **Interactive Shopping Bag & Drawer**: Cart slide-out with live pricing, free shipping calculator, and checkout simulator.
+- **Wishlist & Quick View**: Full-screen modal with color switchers, size selector, fabric details, and real customer reviews.
