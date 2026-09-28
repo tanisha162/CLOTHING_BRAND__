@@ -234,18 +234,15 @@ export const Header: React.FC<HeaderProps> = ({
               />
               <Search className="w-4 h-4 text-[#7A6D60] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
 
-              {headerSearchQuery ? (
+              {headerSearchQuery && (
                 <button
                   type="button"
                   onClick={() => setHeaderSearchQuery('')}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8A7D71] hover:text-black"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8A7D71] hover:text-black p-1 transition-colors"
+                  aria-label="Clear search"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
-              ) : (
-                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] text-[#A6998C] font-semibold hidden lg:inline">
-                  ↵ Enter
-                </span>
               )}
             </form>
 
