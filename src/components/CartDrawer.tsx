@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Check, Tag } from 'lucide-react';
 import { CartItem } from '../types';
+import { getPromoDiscount } from '../utils/promo';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -41,11 +42,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === 'LUMEA15') {
-      setDiscountPercent(15);
-      setPromoMessage({ type: 'success', text: '15% discount applied!' });
+    const discount = getPromoDiscount(promoCode);
+    if (discount > 0) {
+      setDiscountPercent(discount);
+      setPromoMessage({ type: 'success', text: `${discount}% discount applied!` });
     } else {
-      setPromoMessage({ type: 'error', text: 'Invalid promo code. Try "LUMEA15"' });
+      setPromoMessage({ type: 'error', text: 'Invalid promo code. Try "LUMEA15" or "TRIBE15"' });
     }
   };
 
@@ -215,7 +217,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     type="text"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    placeholder="Promo code (e.g. LUMEA15)"
+                    placeholder="Promo code (e.g. TRIBE15)"
                     className="w-full pl-8 pr-3 py-2 text-xs uppercase bg-[#FAF8F5] border border-[#D5C9BC] rounded-sm focus:outline-none focus:ring-1 focus:ring-[#1C1917]"
                   />
                 </div>
