@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Ruler,
   Check,
@@ -62,6 +62,14 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
 
     setCalculatedSize(sizes[idx]);
   };
+
+  // Re-run the recommendation whenever an input changes. The slider and
+  // fit handlers only update state, so calling handleCalculate() inside
+  // them read the previous height/weight/fit and the recommendation lagged
+  // one step behind the displayed inputs.
+  useEffect(() => {
+    handleCalculate();
+  }, [heightCm, weightKg, fitPreference]);
 
   // Measurement charts
   const charts = {
@@ -200,10 +208,7 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
                     min="145"
                     max="195"
                     value={heightCm}
-                    onChange={(e) => {
-                      setHeightCm(Number(e.target.value));
-                      handleCalculate();
-                    }}
+                    onChange={(e) => setHeightCm(Number(e.target.value))}
                     className="w-full accent-[#1C1917] cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-[#8C7E70] mt-1">
@@ -225,10 +230,7 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
                     min="40"
                     max="110"
                     value={weightKg}
-                    onChange={(e) => {
-                      setWeightKg(Number(e.target.value));
-                      handleCalculate();
-                    }}
+                    onChange={(e) => setWeightKg(Number(e.target.value))}
                     className="w-full accent-[#1C1917] cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-[#8C7E70] mt-1">
@@ -252,10 +254,7 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
                     <button
                       key={f.key}
                       type="button"
-                      onClick={() => {
-                        setFitPreference(f.key as any);
-                        handleCalculate();
-                      }}
+                      onClick={() => setFitPreference(f.key as any)}
                       className={`p-3 rounded-2xl text-left border transition-all ${
                         fitPreference === f.key
                           ? 'bg-[#1C1917] text-white border-[#1C1917] shadow-sm'
