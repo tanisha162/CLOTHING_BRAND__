@@ -292,7 +292,7 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
               <div className="w-full space-y-2.5">
                 <button
                   type="button"
-                  onClick={() => onNavigateToCollection('dresses', calculatedSize)}
+                  onClick={() => onNavigateToCollection(calcCategory, calculatedSize)}
                   className="w-full py-3.5 px-4 rounded-xl bg-[#1C1917] hover:bg-[#332E29] text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
                 >
                   <Shirt className="w-4 h-4 text-[#E5A93C]" />
