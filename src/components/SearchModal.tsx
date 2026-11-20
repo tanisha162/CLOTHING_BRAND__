@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Search, Star, ArrowRight, Zap, Ruler, Flame, Sparkles } from 'lucide-react';
 import { Product, AppPage } from '../types';
+import { matchesSearch } from '../utils/search';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -25,14 +26,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
   const [query, setQuery] = useState('');
 
-  const filtered = products.filter(
-    (p) =>
-      p.name.toLowerCase().includes(query.toLowerCase()) ||
-      p.category.toLowerCase().includes(query.toLowerCase()) ||
-      p.description.toLowerCase().includes(query.toLowerCase()) ||
-      p.fabric?.toLowerCase().includes(query.toLowerCase()) ||
-      p.badge?.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = products.filter((p) => matchesSearch(p, query));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -214,6 +208,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                       key={term}
                       type="button"
                       onClick={() => {
+                        // "All Bestsellers" is a shortcut to the
+                        // bestsellers page, not a search phrase —
+                        // searching for it literally matches nothing.
+                        if (term === 'All Bestsellers') {
+                          if (onNavigatePage) onNavigatePage('bestsellers');
+                          onClose();
+                          return;
+                        }
                         setQuery(term);
                         if (onViewAllResults) {
                           onViewAllResults(term);

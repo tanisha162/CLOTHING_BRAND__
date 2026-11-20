@@ -16,6 +16,7 @@ import {
   Star,
 } from 'lucide-react';
 import { AppPage, Product } from '../types';
+import { matchesSearch } from '../utils/search';
 
 interface HeaderProps {
   activePage: AppPage;
@@ -69,16 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
   const searchResults = React.useMemo(() => {
     const q = headerSearchQuery.toLowerCase().trim();
     if (!q) return [];
-    return products
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.fabric?.toLowerCase().includes(q) ||
-          p.badge?.toLowerCase().includes(q)
-      )
-      .slice(0, 6);
+    return products.filter((p) => matchesSearch(p, headerSearchQuery)).slice(0, 6);
   }, [products, headerSearchQuery]);
 
   // Featured trending clothes for the search popup
@@ -369,8 +361,15 @@ export const Header: React.FC<HeaderProps> = ({
                             key={term}
                             type="button"
                             onClick={() => {
-                              setHeaderSearchQuery(term);
-                              onSearchSubmit(term);
+                              // "All Bestsellers" is a shortcut to the
+                              // bestsellers page, not a search phrase —
+                              // searching for it literally matches nothing.
+                              if (term === 'All Bestsellers') {
+                                onNavigatePage('bestsellers');
+                              } else {
+                                setHeaderSearchQuery(term);
+                                onSearchSubmit(term);
+                              }
                               setIsSearchFocused(false);
                             }}
                             className="px-3.5 py-1.5 rounded-full bg-[#F5EFE6] hover:bg-[#1C1917] hover:text-white text-[#4A4036] text-xs font-bold transition-all border border-[#DFD5C6]"

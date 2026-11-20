@@ -15,6 +15,7 @@ import {
   Copy,
 } from 'lucide-react';
 import { Product, AppPage } from '../types';
+import { matchesSearch } from '../utils/search';
 
 interface CollectionPageProps {
   pageType: AppPage;
@@ -82,16 +83,9 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
       return products.filter((p) => p.category === 'handbags');
     }
     if (pageType === 'search') {
-      const q = searchQuery.toLowerCase().trim();
+      const q = searchQuery.trim();
       if (!q) return products;
-      return products.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.fabric?.toLowerCase().includes(q) ||
-          p.badge?.toLowerCase().includes(q)
-      );
+      return products.filter((p) => matchesSearch(p, q));
     }
     return products;
   }, [pageType, products, searchQuery]);
