@@ -126,7 +126,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-4 text-[11px]">
             <span className="hidden md:flex items-center gap-1 text-[#E0D5C7]">
               <Truck className="w-3.5 h-3.5 text-[#FDCB24]" />
-              <span>Free Shipping $50+</span>
+              <span>Free Shipping $75+</span>
             </span>
             <button
               type="button"

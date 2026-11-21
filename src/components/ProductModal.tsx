@@ -264,7 +264,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
               <div className="grid grid-cols-3 gap-2 pt-3 border-t border-[#EAE3D8] text-[10px] text-[#7A6F64] text-center">
                 <div className="flex flex-col items-center gap-1">
                   <Truck className="w-3.5 h-3.5 text-[#4E4338]" />
-                  <span>Free shipping $50+</span>
+                  <span>Free shipping $75+</span>
                 </div>
                 <div className="flex flex-col items-center gap-1">
                   <RefreshCw className="w-3.5 h-3.5 text-[#4E4338]" />
