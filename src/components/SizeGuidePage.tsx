@@ -10,6 +10,7 @@ import {
   Info,
 } from 'lucide-react';
 import { AppPage } from '../types';
+import { formatHeightImperial } from '../utils/height';
 
 interface SizeGuidePageProps {
   onNavigateToCollection: (page: AppPage, filterSize?: string) => void;
@@ -200,7 +201,7 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
                   <div className="flex items-center justify-between text-xs font-semibold text-[#4A4138] mb-2">
                     <span>Height:</span>
                     <span className="text-[#1C1917] font-bold text-sm">
-                      {heightCm} cm ({Math.floor(heightCm / 30.48)}&apos;{Math.round((heightCm % 30.48) / 2.54)}&quot;)
+                      {heightCm} cm ({formatHeightImperial(heightCm)})
                     </span>
                   </div>
                   <input
