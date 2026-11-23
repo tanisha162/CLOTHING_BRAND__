@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Zap, Tag, Copy, Check, Sparkles, Truck, ShieldCheck, ArrowRight } from 'lucide-react';
+import { FREE_SHIPPING_THRESHOLD } from '../utils/shipping';
 
 interface OfferBannerProps {
   onShopCollection?: (pageKey: string) => void;
@@ -158,7 +159,7 @@ export const OfferBanner: React.FC<OfferBannerProps> = ({ onShopCollection }) =>
           </div>
           <div className="text-xs">
             <div className="font-bold text-[#111827]">Express Delivery Pass</div>
-            <div className="text-[#6D5D4E] text-[11px]">Zero shipping on all orders over $50</div>
+            <div className="text-[#6D5D4E] text-[11px]">Zero shipping on all orders over ${FREE_SHIPPING_THRESHOLD}</div>
           </div>
         </div>
       </div>

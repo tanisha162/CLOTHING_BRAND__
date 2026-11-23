@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Check, Tag } from 'lucide-react';
 import { CartItem } from '../types';
 import { getPromoDiscount } from '../utils/promo';
+import {
+  FREE_SHIPPING_THRESHOLD,
+  getShippingCost,
+  isFreeShipping,
+} from '../utils/shipping';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -31,13 +36,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     0
   );
 
-  const freeShippingThreshold = 75.0;
-  const isFreeShipping = subtotal >= freeShippingThreshold;
+  const freeShippingThreshold = FREE_SHIPPING_THRESHOLD;
+  const hasFreeShipping = isFreeShipping(subtotal);
   const amountToFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
   const progressPercent = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
   const discountAmount = (subtotal * discountPercent) / 100;
-  const shippingCost = isFreeShipping || subtotal === 0 ? 0 : 8.0;
+  const shippingCost = getShippingCost(subtotal);
   const total = Math.max(0, subtotal - discountAmount + shippingCost);
 
   const handleApplyPromo = (e: React.FormEvent) => {
@@ -82,7 +87,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           {/* Free Shipping Progress Indicator */}
           <div className="bg-[#F3ECE3] px-5 py-3 border-b border-[#E6DDD1]">
             <div className="flex items-center justify-between text-xs text-[#3E342B] font-medium mb-1.5">
-              {isFreeShipping ? (
+              {hasFreeShipping ? (
                 <span className="text-[#2E7D32] font-semibold flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" /> Free standard shipping unlocked!
                 </span>
@@ -255,7 +260,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 <div className="flex justify-between">
                   <span>Estimated Shipping</span>
-                  <span>{isFreeShipping ? 'FREE' : `$${shippingCost.toFixed(2)}`}</span>
+                  <span>{hasFreeShipping ? 'FREE' : `$${shippingCost.toFixed(2)}`}</span>
                 </div>
 
                 <div className="flex justify-between text-sm font-semibold text-[#1C1917] pt-2 border-t border-[#EFE8DE]">
