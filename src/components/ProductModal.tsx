@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Star,
@@ -32,11 +32,27 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   onAddToCart,
   onOpenSizeGuide,
 }) => {
-  if (!isOpen || !product) return null;
-
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name || '');
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0] || 'M');
+  // Hooks must run before the early return below: calling them after
+  // `if (!isOpen || !product) return null` breaks the Rules of Hooks, so
+  // opening the modal after it rendered closed changes the hook count.
+  const [selectedColor, setSelectedColor] = useState(product?.colors[0]?.name || '');
+  const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || 'M');
   const [justAdded, setJustAdded] = useState(false);
+
+  // The modal stays mounted while it is open, so without this the
+  // color/size picked for one product would carry over to the next
+  // product shown — e.g. a One Size tote could be added to the bag in
+  // size XL and the previous product's colour. Reset to the new
+  // product's own first colour/size whenever it changes.
+  useEffect(() => {
+    if (product) {
+      setSelectedColor(product.colors[0]?.name || '');
+      setSelectedSize(product.sizes[0] || 'M');
+    }
+    setJustAdded(false);
+  }, [product]);
+
+  if (!isOpen || !product) return null;
 
   const handleAdd = () => {
     onAddToCart(product, selectedColor, selectedSize);
