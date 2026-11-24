@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Check, Tag } from 'lucide-react';
 import { CartItem } from '../types';
 import { getPromoDiscount } from '../utils/promo';
@@ -29,6 +29,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoMessage, setPromoMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  // The drawer stays mounted while closed, so promo state would otherwise
+  // survive checkout: the next order would silently get the previous
+  // order's discount without any code being entered. An empty bag has no
+  // order to discount, so clear the promo state when it empties.
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      setDiscountPercent(0);
+      setPromoCode('');
+      setPromoMessage(null);
+    }
+  }, [cartItems.length]);
+
   if (!isOpen) return null;
 
   const subtotal = cartItems.reduce(
@@ -52,6 +64,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       setDiscountPercent(discount);
       setPromoMessage({ type: 'success', text: `${discount}% discount applied!` });
     } else {
+      // A failed code must not leave a previously applied discount in
+      // place while the message says the code is invalid.
+      setDiscountPercent(0);
       setPromoMessage({ type: 'error', text: 'Invalid promo code. Try "LUMEA15" or "TRIBE15"' });
     }
   };
