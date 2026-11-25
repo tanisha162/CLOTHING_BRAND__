@@ -410,9 +410,24 @@ export const SizeGuidePage: React.FC<SizeGuidePageProps> = ({
                           {row.size}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 sm:px-6 text-[#736658] font-medium">
-                        {row.us}
-                      </td>
+                      {/* Every body cell must line up with a header: the
+                          dresses chart dropped its UK/AU column (header and
+                          data present, no cell), so bust/waist/hip rendered
+                          one column left, and the handbags chart rendered a
+                          "Universal" US cell its headers have no column
+                          for, shifting every measurement right. Render the
+                          US cell only for charts with a US header, and the
+                          UK/AU cell only for rows that carry one. */}
+                      {charts[activeCategory].headers.includes('US') && (
+                        <td className="py-3.5 px-4 sm:px-6 text-[#736658] font-medium">
+                          {row.us}
+                        </td>
+                      )}
+                      {row.uk !== undefined && (
+                        <td className="py-3.5 px-4 sm:px-6 text-[#736658] font-medium">
+                          {row.uk}
+                        </td>
+                      )}
                       {values.map((val: string, i: number) => (
                         <td key={i} className="py-3.5 px-4 sm:px-6 font-medium">
                           {val}
