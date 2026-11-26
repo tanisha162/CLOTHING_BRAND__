@@ -245,7 +245,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   You are $80 away from unlocking <strong>Gold Muse</strong> tier perks.
                 </p>
                 <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs">
-                  <span>Available Coupon: <strong>$15 Off ($100+ order)</strong></span>
+                  <span>Available Coupon: <strong>15% Off</strong></span>
                   <span className="bg-[#FAF8F5]/20 px-2 py-0.5 rounded-full text-[10px] font-mono">
                     MUSE15
                   </span>
