@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
               <Zap className="w-3.5 h-3.5 fill-[#111827]" /> TRIBE VIP PASS
             </span>
             <span className="text-[#FAF5EE]">
-              FLAT <strong>40% OFF</strong> + Extra <strong>15% VIP Discount</strong> on all collections
+              UP TO <strong>34% OFF</strong> + Extra <strong>15% VIP Discount</strong> on all collections
             </span>
           </div>
 

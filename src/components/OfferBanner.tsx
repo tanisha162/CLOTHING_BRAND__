@@ -42,18 +42,18 @@ export const OfferBanner: React.FC<OfferBannerProps> = ({ onShopCollection }) =>
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black text-[#111827] tracking-tight leading-tight">
-              FLAT 40% OFF <span className="text-[#881337]">+ EXTRA 15%</span> FOR MEMBERS
+              UP TO 34% OFF <span className="text-[#881337]">+ EXTRA 15%</span> FOR MEMBERS
             </h2>
 
             <p className="text-xs sm:text-sm md:text-base text-[#2E2415] font-medium max-w-2xl leading-relaxed">
-              Unlock exclusive member prices across all Dresses, Tops, Outerwear & Handbags. No minimum cart value + Free Priority Shipping!
+              Unlock exclusive member prices across all Dresses, Tops, Outerwear & Handbags. Free shipping on orders over ${FREE_SHIPPING_THRESHOLD}!
             </p>
 
             {/* Quick Guarantees bar */}
             <div className="flex items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-[#3B2C13] flex-wrap">
               <div className="flex items-center gap-1.5">
                 <Truck className="w-4 h-4 text-[#111827]" />
-                <span>Free Express Delivery</span>
+                <span>Free Shipping $75+</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[#111827]" />
@@ -61,7 +61,7 @@ export const OfferBanner: React.FC<OfferBannerProps> = ({ onShopCollection }) =>
               </div>
               <div className="flex items-center gap-1.5">
                 <Tag className="w-4 h-4 text-[#111827]" />
-                <span>Instant Auto-Applied TriBe Rates</span>
+                <span>Instant TriBe Member Rates</span>
               </div>
             </div>
           </div>
@@ -145,11 +145,11 @@ export const OfferBanner: React.FC<OfferBannerProps> = ({ onShopCollection }) =>
 
         <div className="bg-white rounded-2xl p-3.5 border border-[#E8DFC8] flex items-center gap-3 shadow-xs">
           <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-900 flex items-center justify-center font-black text-sm flex-shrink-0">
-            2FOR
+            TEES
           </div>
           <div className="text-xs">
-            <div className="font-bold text-[#111827]">Tops & Tees Bundle</div>
-            <div className="text-[#6D5D4E] text-[11px]">Buy any 2 casual tees for just $29.99</div>
+            <div className="font-bold text-[#111827]">Tops & Tees</div>
+            <div className="text-[#6D5D4E] text-[11px]">Casual tees from just $16.99</div>
           </div>
         </div>
 

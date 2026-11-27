@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "test": "tsx src/utils/search.test.ts && tsx src/utils/height.test.ts && tsx src/utils/shipping.test.ts && tsx src/components/ProductModal.test.tsx && tsx src/components/SizeGuidePage.test.tsx && tsx src/components/AccountModal.test.tsx"
+    "test": "tsx src/utils/search.test.ts && tsx src/utils/height.test.ts && tsx src/utils/shipping.test.ts && tsx src/components/ProductModal.test.tsx && tsx src/components/SizeGuidePage.test.tsx && tsx src/components/AccountModal.test.tsx && tsx src/components/OffersCopy.test.tsx"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

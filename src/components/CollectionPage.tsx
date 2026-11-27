@@ -214,13 +214,13 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
               </div>
 
               <h2 className="font-serif text-2xl sm:text-3xl font-black text-[#111827] tracking-tight">
-                TriBe Club Members: Flat 40% OFF + Extra 15% Auto-Savings
+                TriBe Club Members: Up to 34% OFF + Extra 15% Savings
               </h2>
 
               <div className="flex items-center gap-4 text-xs font-bold text-[#3B2C13] flex-wrap pt-0.5">
-                <span>⚡ Auto-Applied at Checkout</span>
+                <span>⚡ Use Code TRIBE15 at Checkout</span>
                 <span>&bull;</span>
-                <span>🚚 Free Express Delivery</span>
+                <span>🚚 Free Shipping Over $75</span>
                 <span>&bull;</span>
                 <span>🔄 30-Day Free Exchanges</span>
               </div>
